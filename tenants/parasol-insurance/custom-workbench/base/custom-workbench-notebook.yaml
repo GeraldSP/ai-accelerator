@@ -91,10 +91,10 @@ spec:
         - emptyDir:
             medium: Memory
           name: shm
-        - configMap:
-            items:
-              - key: ca-bundle.crt
-                path: ca-bundle.crt
-            name: workbench-trusted-ca-bundle
-            optional: true
-          name: trusted-ca
+        # - configMap:
+        #     items:
+        #       - key: ca-bundle.crt
+        #         path: ca-bundle.crt
+        #     name: workbench-trusted-ca-bundle
+        #     optional: true
+        #   name: trusted-ca
