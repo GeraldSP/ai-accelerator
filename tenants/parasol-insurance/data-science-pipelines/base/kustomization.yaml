@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: parasol-insurance
 resources:
   - dspa.yaml
+  - minio-data-connection.yaml
