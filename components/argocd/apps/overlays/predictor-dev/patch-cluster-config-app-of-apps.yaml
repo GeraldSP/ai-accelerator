@@ -4,4 +4,4 @@ metadata:
   name: cluster-config-app-of-apps
 spec:
   source:
-    path: clusters/overlays/rhoai-stable-2.8
+    path: clusters/overlays/predictor-dev
