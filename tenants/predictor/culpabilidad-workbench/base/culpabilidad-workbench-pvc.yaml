@@ -1,0 +1,17 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  annotations:
+    openshift.io/display-name: predictor-culpabilidad-wb-storage
+  name: predictor-culpabilidad-wb-storage
+  namespace: predictor-culpabilidad
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 60Gi
+  storageClassName: gp3-csi
+  volumeMode: Filesystem

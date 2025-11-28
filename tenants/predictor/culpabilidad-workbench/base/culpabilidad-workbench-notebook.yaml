@@ -1,0 +1,194 @@
+apiVersion: kubeflow.org/v1beta1
+kind: Notebook
+metadata:
+  annotations:
+    notebooks.opendatahub.io/inject-oauth: 'true'
+    opendatahub.io/image-display-name: CUDA
+    opendatahub.io/accelerator-name: migrated-gpu
+    openshift.io/description: ''
+    openshift.io/display-name: predictor-culpabilidad-wb
+    notebooks.opendatahub.io/last-image-version-git-commit-selection: '2e70684'
+    notebooks.opendatahub.io/last-image-selection: 'minimal-gpu:2025.1'
+    notebooks.opendatahub.io/last-size-selection: Small
+    opendatahub.io/username: admin
+    opendatahub.io/hardware-profile-name: ''
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: predictor-culpabilidad-wb
+  namespace: predictor-culpabilidad
+  labels:
+    app: predictor-culpabilidad-wb
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/odh-managed: 'true'
+    opendatahub.io/user: admin
+spec:
+  template:
+    spec:
+      containers:
+        - resources:
+            limits:
+              cpu: '2'
+              memory: 8Gi
+              nvidia.com/gpu: '1'
+            requests:
+              cpu: '1'
+              memory: 8Gi
+              nvidia.com/gpu: '1'
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/predictor-culpabilidad/predictor-culpabilidad-wb/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: predictor-culpabilidad-wb
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/predictor-culpabilidad/predictor-culpabilidad-wb/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          env:
+            - name: NOTEBOOK_ARGS
+              value: |-
+                --ServerApp.port=8888
+                --ServerApp.token=''
+                --ServerApp.password=''
+                --ServerApp.base_url=/notebook/predictor-culpabilidad/predictor-culpabilidad-wb
+                --ServerApp.quit_button=False
+                --ServerApp.tornado_settings={"user":"admin","hub_host":"","hub_prefix":"/projects/predictor-culpabilidad"}
+            - name: JUPYTER_IMAGE
+              value: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/minimal-gpu:2025.1'
+            - name: PIP_CERT
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: REQUESTS_CA_BUNDLE
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: SSL_CERT_FILE
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: PIPELINES_SSL_SA_CERTS
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: GIT_SSL_CAINFO
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+          ports:
+            - containerPort: 8888
+              name: notebook-port
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /opt/app-root/src/
+              name: predictor-culpabilidad-wb-storage
+            - mountPath: /dev/shm
+              name: shm
+            - mountPath: /etc/pki/tls/custom-certs/ca-bundle.crt
+              name: trusted-ca
+              readOnly: true
+              subPath: ca-bundle.crt
+            - mountPath: /opt/app-root/pipeline-runtimes/
+              name: runtime-images
+          image: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/minimal-gpu:2025.1'
+          workingDir: /opt/app-root/src
+        - resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /oauth/healthz
+              port: oauth-proxy
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: oauth-proxy
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /oauth/healthz
+              port: oauth-proxy
+              scheme: HTTPS
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - containerPort: 8443
+              name: oauth-proxy
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /etc/oauth/client
+              name: oauth-client
+            - mountPath: /etc/oauth/config
+              name: oauth-config
+            - mountPath: /etc/tls/private
+              name: tls-certificates
+          image: 'registry.redhat.io/openshift4/ose-oauth-proxy@sha256:4f8d66597feeb32bb18699326029f9a71a5aca4a57679d636b876377c2e95695'
+          args:
+            - '--provider=openshift'
+            - '--https-address=:8443'
+            - '--http-address='
+            - '--openshift-service-account=predictor-culpabilidad-wb'
+            - '--cookie-secret-file=/etc/oauth/config/cookie_secret'
+            - '--cookie-expire=24h0m0s'
+            - '--tls-cert=/etc/tls/private/tls.crt'
+            - '--tls-key=/etc/tls/private/tls.key'
+            - '--upstream=http://localhost:8888'
+            - '--upstream-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
+            - '--email-domain=*'
+            - '--skip-provider-button'
+            - '--client-id=predictor-culpabilidad-wb-predictor-culpabilidad-oauth-client'
+            - '--client-secret-file=/etc/oauth/client/secret'
+            - '--scope=user:info user:check-access'
+            - '--openshift-sar={"verb":"get","resource":"notebooks","resourceAPIGroup":"kubeflow.org","resourceName":"predictor-culpabilidad-wb","namespace":"$(NAMESPACE)"}'
+      enableServiceLinks: false
+      serviceAccountName: predictor-culpabilidad-wb
+      tolerations:
+        - effect: NoSchedule
+          key: nvidia.com/gpu
+          operator: Exists
+      volumes:
+        - name: predictor-culpabilidad-wb-storage
+          persistentVolumeClaim:
+            claimName: predictor-culpabilidad-wb-storage
+        - emptyDir:
+            medium: Memory
+          name: shm
+        - configMap:
+            items:
+              - key: ca-bundle.crt
+                path: ca-bundle.crt
+            name: workbench-trusted-ca-bundle
+            optional: true
+          name: trusted-ca
+        - configMap:
+            name: pipeline-runtime-images
+            optional: true
+          name: runtime-images
+        - name: oauth-config
+          secret:
+            defaultMode: 420
+            secretName: predictor-culpabilidad-wb-oauth-config
+        - name: oauth-client
+          secret:
+            defaultMode: 420
+            secretName: predictor-culpabilidad-wb-oauth-client
+        - name: tls-certificates
+          secret:
+            defaultMode: 420
+            secretName: predictor-culpabilidad-wb-tls

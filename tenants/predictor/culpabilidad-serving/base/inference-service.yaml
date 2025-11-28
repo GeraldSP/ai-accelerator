@@ -1,0 +1,23 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    openshift.io/display-name: culpabilidad-model
+    serving.kserve.io/deploymentMode: ModelMesh
+  name: culpabilidad-model
+  namespace: predictor-culpabilidad
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  predictor:
+    automountServiceAccountToken: false
+    model:
+      modelFormat:
+        name: onnx
+        version: '1'
+      name: ''
+      resources: {}
+      runtime: model-server
+      storage:
+        key: culpabilidad-connection
+        path: modelo_onnx_exportado/
