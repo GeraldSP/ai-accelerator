@@ -1,14 +1,14 @@
-apiVersion: kubeflow.org/v1beta1
+apiVersion: kubeflow.org/v1
 kind: Notebook
 metadata:
   annotations:
     notebooks.opendatahub.io/inject-oauth: 'true'
-    opendatahub.io/image-display-name: CUDA
-    opendatahub.io/accelerator-name: migrated-gpu
+    opendatahub.io/image-display-name: Standard Data Science
+    opendatahub.io/accelerator-name: ''
     openshift.io/description: ''
     openshift.io/display-name: predictor-culpabilidad-wb
     notebooks.opendatahub.io/last-image-version-git-commit-selection: '2e70684'
-    notebooks.opendatahub.io/last-image-selection: 'minimal-gpu:2025.1'
+    notebooks.opendatahub.io/last-image-selection: 's2i-generic-data-science-notebook:2025.1'
     notebooks.opendatahub.io/last-size-selection: Small
     opendatahub.io/username: admin
     opendatahub.io/hardware-profile-name: ''
@@ -28,11 +28,9 @@ spec:
             limits:
               cpu: '2'
               memory: 8Gi
-              nvidia.com/gpu: '1'
             requests:
               cpu: '1'
               memory: 8Gi
-              nvidia.com/gpu: '1'
           readinessProbe:
             failureThreshold: 3
             httpGet:
@@ -64,7 +62,7 @@ spec:
                 --ServerApp.quit_button=False
                 --ServerApp.tornado_settings={"user":"admin","hub_host":"","hub_prefix":"/projects/predictor-culpabilidad"}
             - name: JUPYTER_IMAGE
-              value: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/minimal-gpu:2025.1'
+              value: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2025.1'
             - name: PIP_CERT
               value: /etc/pki/tls/custom-certs/ca-bundle.crt
             - name: REQUESTS_CA_BUNDLE
@@ -91,7 +89,7 @@ spec:
               subPath: ca-bundle.crt
             - mountPath: /opt/app-root/pipeline-runtimes/
               name: runtime-images
-          image: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/minimal-gpu:2025.1'
+          image: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2025.1'
           workingDir: /opt/app-root/src
         - resources:
             limits:
@@ -158,10 +156,6 @@ spec:
             - '--openshift-sar={"verb":"get","resource":"notebooks","resourceAPIGroup":"kubeflow.org","resourceName":"predictor-culpabilidad-wb","namespace":"$(NAMESPACE)"}'
       enableServiceLinks: false
       serviceAccountName: predictor-culpabilidad-wb
-      tolerations:
-        - effect: NoSchedule
-          key: nvidia.com/gpu
-          operator: Exists
       volumes:
         - name: predictor-culpabilidad-wb-storage
           persistentVolumeClaim:

@@ -6,11 +6,4 @@ metadata:
     kubernetes.io/metadata.name: predictor-culpabilidad
     modelmesh-enabled: 'true'
     opendatahub.io/dashboard: 'true'
-    openshift-pipelines.tekton.dev/namespace-reconcile-version: 1.17.2
-    pod-security.kubernetes.io/audit: baseline
-    pod-security.kubernetes.io/audit-version: latest
-    pod-security.kubernetes.io/warn: baseline
-    pod-security.kubernetes.io/warn-version: latest
-  annotations:
-    openshift.io/description: ''
-    openshift.io/display-name: predictor-culpabilidad
+
