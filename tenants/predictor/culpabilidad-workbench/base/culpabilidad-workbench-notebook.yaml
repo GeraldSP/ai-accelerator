@@ -34,7 +34,7 @@ spec:
             - name: GITSYNC_ROOT
               value: "/opt/app-root/src/.git-sync"
             - name: GITSYNC_LINK
-              value: "/opt/app-root/src"
+              value: "/opt/app-root/src/repo"
             - name: GITSYNC_ONE_TIME
               value: "true"
           volumeMounts:
