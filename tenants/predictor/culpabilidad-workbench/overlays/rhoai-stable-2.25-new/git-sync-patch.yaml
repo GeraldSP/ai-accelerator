@@ -1,0 +1,45 @@
+apiVersion: kubeflow.org/v1
+kind: Notebook
+metadata:
+  name: predictor-culpabilidad-wb
+  namespace: predictor-culpabilidad
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: git-sync
+          env:
+            # Override these values as needed
+            - name: GIT_SYNC_REPO
+              value: "git@github.com:GeraldSP/eda-simple-notebooks.git"  # Change this to your repository URL
+            - name: GIT_SYNC_BRANCH
+              value: "main"  # Change this to your branch name
+            # Option 1: Use username/password authentication
+            # Uncomment and configure if you need git credentials
+            # - name: GIT_SYNC_USERNAME
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: git-credentials
+            #       key: username
+            # - name: GIT_SYNC_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: git-credentials
+            #       key: password
+            # Option 2: Use SSH key authentication
+            # Uncomment if using SSH key for authentication
+            - name: GIT_SYNC_SSH
+              value: "true"
+            - name: GIT_SSH_KEY_FILE
+              value: "/etc/git-secret/ssh"
+            volumeMounts:
+              - name: git-ssh-key
+                mountPath: /etc/git-secret
+                readOnly: true
+      volumes:
+        # Uncomment if using SSH key authentication
+        - name: git-ssh-key
+          secret:
+            secretName: git-ssh-key
+            defaultMode: 0400
+
