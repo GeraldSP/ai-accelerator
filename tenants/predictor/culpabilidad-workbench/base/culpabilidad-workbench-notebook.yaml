@@ -23,6 +23,23 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+        - name: git-sync
+          image: registry.k8s.io/git-sync/git-sync:v3.6.2
+          env:
+            - name: GIT_SYNC_REPO
+              value: "https://github.com/myorg/myrepo.git"
+            - name: GIT_SYNC_BRANCH
+              value: "main"
+            - name: GIT_SYNC_ROOT
+              value: "/tmp/git"
+            - name: GIT_SYNC_DEST
+              value: "repo"
+            - name: GIT_SYNC_ONE_TIME
+              value: "true"
+          volumeMounts:
+            - name: predictor-culpabilidad-wb-storage
+              mountPath: /opt/app-root/src/
       containers:
         - resources:
             limits:
