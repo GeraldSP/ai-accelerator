@@ -1,27 +1,24 @@
-kind: Notebook
-apiVersion: kubeflow.org/v1
-metadata:
-  name: predictor-culpabilidad-wb
-spec:
-  template:
-    spec:
-      initContainers:
-        - name: git-sync
-          env:
-            - name: GIT_SYNC_REPO
-              value: "git@github.com:GeraldSP/eda-simple-notebooks.git"
-            - name: GIT_SYNC_BRANCH
-              value: "main"
-            - name: GIT_SYNC_SSH
-              value: "true"
-            - name: GIT_SSH_KEY_FILE
-              value: "/etc/git-secret/ssh"
-          volumeMounts:
-            - name: git-ssh-key
-              mountPath: /etc/git-secret
-              readOnly: true
-      volumes:
-        - name: git-ssh-key
-          secret:
-            secretName: git-ssh-key
-            defaultMode: 0400
+- op: replace
+  path: /spec/template/spec/initContainers/0/env
+  value:
+    - name: GIT_SYNC_REPO
+      value: "git@github.com:GeraldSP/eda-simple-notebooks.git"
+    - name: GIT_SYNC_BRANCH
+      value: "main"
+    - name: GIT_SYNC_SSH
+      value: "true"
+    - name: GIT_SSH_KEY_FILE
+      value: "/etc/git-secret/ssh"
+- op: add
+  path: /spec/template/spec/initContainers/0/volumeMounts/-
+  value:
+    name: git-ssh-key
+    mountPath: /etc/git-secret
+    readOnly: true
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: git-ssh-key
+    secret:
+      secretName: git-ssh-key
+      defaultMode: 0400
