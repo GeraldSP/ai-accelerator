@@ -6,6 +6,3 @@ resources:
 
 patches:
   - path: git-sync-patch.yaml
-    target:
-      kind: Notebook
-      name: predictor-culpabilidad-wb
