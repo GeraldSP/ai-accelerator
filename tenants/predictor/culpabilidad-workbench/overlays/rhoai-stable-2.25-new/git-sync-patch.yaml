@@ -5,6 +5,12 @@
       value: "git@github.com:GeraldSP/eda-simple-notebooks.git"
     - name: GITSYNC_REF
       value: "main"
+    - name: GITSYNC_ROOT
+      value: "/opt/app-root/src/.git-sync"
+    - name: GITSYNC_LINK
+      value: "/opt/app-root/src"
+    - name: GITSYNC_ONE_TIME
+      value: "true"
     - name: GITSYNC_SSH
       value: "true"
     - name: GITSYNC_SSH_KEY_FILE

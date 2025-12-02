@@ -32,14 +32,14 @@ spec:
             - name: GITSYNC_REF
               value: "main"
             - name: GITSYNC_ROOT
-              value: "/tmp/git"
+              value: "/opt/app-root/src/.git-sync"
             - name: GITSYNC_LINK
-              value: "repo"
+              value: "/opt/app-root/src"
             - name: GITSYNC_ONE_TIME
               value: "true"
           volumeMounts:
             - name: predictor-culpabilidad-wb-storage
-              mountPath: /opt/app-root/src/
+              mountPath: /opt/app-root/src
       containers:
         - resources:
             limits:
