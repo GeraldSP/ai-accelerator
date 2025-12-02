@@ -5,4 +5,7 @@ resources:
   - ../../base
 
 patches:
-  - path: git-sync-patch.yaml
+  - target:
+      kind: Notebook
+      name: predictor-culpabilidad-wb
+    path: git-sync-patch.yaml
