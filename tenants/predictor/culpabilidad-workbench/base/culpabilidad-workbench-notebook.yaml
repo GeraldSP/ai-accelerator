@@ -25,17 +25,17 @@ spec:
     spec:
       initContainers:
         - name: git-sync
-          image: registry.k8s.io/git-sync/git-sync:v3.6.2
+          image: registry.k8s.io/git-sync/git-sync:v4.2.0
           env:
-            - name: GIT_SYNC_REPO
+            - name: GITSYNC_REPO
               value: "https://github.com/myorg/myrepo.git"
-            - name: GIT_SYNC_BRANCH
+            - name: GITSYNC_REF
               value: "main"
-            - name: GIT_SYNC_ROOT
+            - name: GITSYNC_ROOT
               value: "/tmp/git"
-            - name: GIT_SYNC_DEST
+            - name: GITSYNC_LINK
               value: "repo"
-            - name: GIT_SYNC_ONE_TIME
+            - name: GITSYNC_ONE_TIME
               value: "true"
           volumeMounts:
             - name: predictor-culpabilidad-wb-storage

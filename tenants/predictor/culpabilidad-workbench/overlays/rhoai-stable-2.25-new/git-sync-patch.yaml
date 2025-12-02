@@ -1,15 +1,15 @@
 - op: replace
   path: /spec/template/spec/initContainers/0/env
   value:
-    - name: GIT_SYNC_REPO
+    - name: GITSYNC_REPO
       value: "git@github.com:GeraldSP/eda-simple-notebooks.git"
-    - name: GIT_SYNC_BRANCH
+    - name: GITSYNC_REF
       value: "main"
-    - name: GIT_SYNC_SSH
+    - name: GITSYNC_SSH
       value: "true"
-    - name: GIT_SSH_KEY_FILE
+    - name: GITSYNC_SSH_KEY_FILE
       value: "/etc/git-secret/ssh"
-    - name: GIT_SSH_KNOWN_HOSTS
+    - name: GITSYNC_SSH_KNOWN_HOSTS
       value: "false"
 - op: add
   path: /spec/template/spec/initContainers/0/volumeMounts/-
