@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
   - ../../base
 
-patchesStrategicMerge:
-  - git-sync-patch.yaml
-
+patches:
+  - path: git-sync-patch.yaml
+    target:
+      kind: Notebook
+      name: predictor-culpabilidad-wb
