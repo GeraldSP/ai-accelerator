@@ -2,68 +2,65 @@ apiVersion: serving.kserve.io/v1alpha1
 kind: ServingRuntime
 metadata:
   annotations:
-    opendatahub.io/template-name: ovms
+    opendatahub.io/template-name: kserve-ovms
     opendatahub.io/serving-runtime-scope: global
     opendatahub.io/runtime-version: v2025.1
     opendatahub.io/accelerator-name: ''
-    openshift.io/display-name: model-server
+    openshift.io/display-name: culpabilidad-model
     opendatahub.io/template-display-name: OpenVINO Model Server
     opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
     opendatahub.io/apiProtocol: REST
     opendatahub.io/hardware-profile-name: migrated-gpu-mglzi-serving
-    enable-route: 'true'
-  name: model-server
-  namespace: predictor-culpabilidad
+  name: culpabilidad-model
   labels:
     opendatahub.io/dashboard: 'true'
 spec:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: '8888'
+  containers:
+    - args:
+        - '--model_name={{.Name}}'
+        - '--port=8001'
+        - '--rest_port=8888'
+        - '--model_path=/mnt/models'
+        - '--file_system_poll_wait_seconds=0'
+        - '--grpc_bind_address=0.0.0.0'
+        - '--rest_bind_address=0.0.0.0'
+        - '--target_device=AUTO'
+        - '--metrics_enable'
+      image: 'quay.io/modh/openvino_model_server@sha256:eee2857ddd5cc2df9ea7373ae7c6ae814d77bd631db5c52b91edad18ac6c73c8'
+      name: kserve-container
+      ports:
+        - containerPort: 8888
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /dev/shm
+          name: shm
+  multiModel: false
+  protocolVersions:
+    - v2
+    - grpc-v2
   supportedModelFormats:
     - autoSelect: true
       name: openvino_ir
-      version: opset1
+      version: opset13
+    - name: onnx
+      version: '1'
     - autoSelect: true
-      name: onnx
+      name: tensorflow
       version: '1'
     - autoSelect: true
       name: tensorflow
       version: '2'
-  builtInAdapter:
-    env:
-      - name: OVMS_FORCE_TARGET_DEVICE
-        value: AUTO
-    memBufferBytes: 134217728
-    modelLoadingTimeoutMillis: 90000
-    runtimeManagementPort: 8888
-    serverType: ovms
-  multiModel: true
-  containers:
-    - args:
-        - '--port=8001'
-        - '--rest_port=8888'
-        - '--config_path=/models/model_config_list.json'
-        - '--file_system_poll_wait_seconds=0'
-        - '--grpc_bind_address=0.0.0.0'
-        - '--rest_bind_address=0.0.0.0'
-      image: 'quay.io/modh/openvino_model_server@sha256:eee2857ddd5cc2df9ea7373ae7c6ae814d77bd631db5c52b91edad18ac6c73c8'
-      name: ovms
-      resources:
-        limits:
-          cpu: '2'
-          memory: 8Gi
-        requests:
-          cpu: '1'
-          memory: 4Gi
-      volumeMounts:
-        - mountPath: /dev/shm
-          name: shm
-  protocolVersions:
-    - grpc-v1
-  grpcEndpoint: 'port:8085'
+    - autoSelect: true
+      name: paddle
+      version: '2'
+    - autoSelect: true
+      name: pytorch
+      version: '2'
   volumes:
     - emptyDir:
         medium: Memory
         sizeLimit: 2Gi
       name: shm
-  replicas: 1
-  tolerations: []
-  grpcDataEndpoint: 'port:8001'

@@ -1,0 +1,19 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: culpabilidad-connection
+  labels:
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/managed: 'true'
+  annotations:
+    opendatahub.io/connection-type: s3
+    opendatahub.io/connection-type-ref: s3
+    openshift.io/description: ''
+    openshift.io/display-name: culpabilidad-connection
+data:
+  AWS_ACCESS_KEY_ID: bWluaW8=
+  AWS_DEFAULT_REGION: bm9uZQ==
+  AWS_S3_BUCKET: Y3VscGFiaWxpZGFk
+  AWS_S3_ENDPOINT: aHR0cDovL21pbmlvLXNlcnZpY2UubGEtc2VndW5kYS5zdmMuY2x1c3Rlci5sb2NhbDo5MDAw
+  AWS_SECRET_ACCESS_KEY: bWluaW8xMjM=
+type: Opaque

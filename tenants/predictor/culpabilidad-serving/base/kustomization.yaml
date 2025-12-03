@@ -4,6 +4,6 @@ kind: Kustomization
 namespace: predictor-culpabilidad
 
 resources:
-  - serving-runtime.yaml
-  - inference-service.yaml
-
+  - culpabilidad-connection.yaml
+  - servingruntime.yaml
+  - inferenceservice.yaml

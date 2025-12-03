@@ -3,21 +3,29 @@ kind: InferenceService
 metadata:
   annotations:
     openshift.io/display-name: culpabilidad-model
-    serving.kserve.io/deploymentMode: ModelMesh
+    serving.kserve.io/deploymentMode: RawDeployment
   name: culpabilidad-model
-  namespace: predictor-culpabilidad
   labels:
+    networking.kserve.io/visibility: exposed
     opendatahub.io/dashboard: 'true'
 spec:
   predictor:
     automountServiceAccountToken: false
+    maxReplicas: 1
+    minReplicas: 1
     model:
       modelFormat:
         name: onnx
         version: '1'
       name: ''
-      resources: {}
-      runtime: model-server
+      resources:
+        limits:
+          cpu: '2'
+          memory: 8Gi
+        requests:
+          cpu: '1'
+          memory: 4Gi
+      runtime: culpabilidad-model
       storage:
         key: culpabilidad-connection
         path: modelo_onnx_exportado/
