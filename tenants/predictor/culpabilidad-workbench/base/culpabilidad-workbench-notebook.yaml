@@ -24,6 +24,22 @@ spec:
   template:
     spec:
       initContainers:
+        - name: fix-passwd
+          image: registry.access.redhat.com/ubi9-minimal
+          command:
+            - /bin/bash
+            - -c
+          args:
+            - |
+              echo "Copying original passwd..."
+              cp /etc/passwd /tmp/passwd
+              UID=$(id -u)
+              echo "Adding UID $UID to passwd..."
+              echo "gitsync:x:${UID}:0:Dynamic User:/home:/sbin/nologin" >> /tmp/passwd
+              mv /tmp/passwd /mnt/etc/passwd
+          volumeMounts:
+            - name: etc-passwd
+              mountPath: /mnt/etc
         - name: git-sync
           image: registry.k8s.io/git-sync/git-sync:v4.2.0
           env:
@@ -40,6 +56,9 @@ spec:
           volumeMounts:
             - name: predictor-culpabilidad-wb-storage
               mountPath: /opt/app-root/src
+            - name: etc-passwd
+              mountPath: /etc/passwd
+              subPath: passwd
       containers:
         - resources:
             limits:
@@ -100,6 +119,9 @@ spec:
               name: predictor-culpabilidad-wb-storage
             - mountPath: /dev/shm
               name: shm
+            - mountPath: /etc/passwd
+              name: etc-passwd
+              subPath: passwd
             - mountPath: /etc/pki/tls/custom-certs/ca-bundle.crt
               name: trusted-ca
               readOnly: true
@@ -177,6 +199,8 @@ spec:
         - name: predictor-culpabilidad-wb-storage
           persistentVolumeClaim:
             claimName: predictor-culpabilidad-wb-storage
+        - name: etc-passwd
+          emptyDir: {}
         - emptyDir:
             medium: Memory
           name: shm
