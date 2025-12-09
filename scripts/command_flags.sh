@@ -7,6 +7,7 @@ function show_help {
   echo "  --timeout=45          Timeout in seconds for waiting for each resource to be ready"
   echo "  -f                    If set, will update the \`patch-application-repo-revision\` folder inside of your overlay with the current git information and push a checkin"
   echo "  --reset-git           Locally resets changes made by the bootstrap script. Please run and checkin the changes before creating a PR"
+  echo "  --manual              Generate YAML files only (do not apply to cluster). Assumes ArgoCD is already installed."
   echo "  --help                Show this help message"
 }
 
@@ -35,6 +36,11 @@ do
     --reset-git)
       source "$(dirname "$0")/reset_git.sh"
       exit 0
+    ;;
+    --manual)
+      export MANUAL_MODE=true
+      echo "Manual mode enabled: will generate YAML files only (no cluster operations)"
+      shift
     ;;
     --help)
       show_help
