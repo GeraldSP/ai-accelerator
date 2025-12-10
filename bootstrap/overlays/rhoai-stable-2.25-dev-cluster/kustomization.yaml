@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ../../../clusters/overlays/rhoai-stable-2.25-new
+  - ../../../clusters/overlays/rhoai-stable-2.25-dev-cluster
