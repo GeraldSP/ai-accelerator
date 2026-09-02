@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 patch_route_host() {
-  CONSOLE_URL=$(oc whoami --show-console)
+  CONSOLE_URL=$(oc get configmap/console-public -n openshift-config-managed -o jsonpath='{.data.consoleURL}')
   if [ -z "${CONSOLE_URL}" ]; then
-    echo "Failed to retrieve console URL from oc whoami --show-console"
+    echo "Failed to retrieve console URL from openshift-config-managed/console-public"
     return 1
   fi
 
