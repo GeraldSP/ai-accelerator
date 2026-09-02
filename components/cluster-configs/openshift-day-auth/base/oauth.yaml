@@ -1,0 +1,27 @@
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+  name: cluster
+spec:
+  identityProviders:
+  - name: rhbk
+    mappingMethod: claim
+    type: OpenID
+    openID:
+      clientID: idp-4-ocp
+      clientSecret:
+        name: rhbk-openid-client-secret
+      claims:
+        email:
+        - email
+        name:
+        - name
+        preferredUsername:
+        - preferred_username
+      issuer: https://sso.apps.ocp.5k84w.sandbox1301.opentlc.com/realms/sso
+  - name: htpasswd
+    mappingMethod: claim
+    type: HTPasswd
+    htpasswd:
+      fileData:
+        name: htpass-secret
