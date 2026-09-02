@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: job-openshift-day-gpu-machineset
+  namespace: nvidia-gpu-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: job-openshift-day-gpu-machineset
+rules:
+- apiGroups:
+  - machine.openshift.io
+  resources:
+  - machinesets
+  verbs:
+  - '*'
+- apiGroups:
+  - autoscaling.openshift.io
+  resources:
+  - machineautoscalers
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: job-openshift-day-gpu-machineset
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: job-openshift-day-gpu-machineset
+subjects:
+  - kind: ServiceAccount
+    name: job-openshift-day-gpu-machineset
+    namespace: nvidia-gpu-operator

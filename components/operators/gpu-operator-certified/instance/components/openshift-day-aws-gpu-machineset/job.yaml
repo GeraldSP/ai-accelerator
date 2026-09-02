@@ -1,0 +1,44 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: job-openshift-day-gpu-machineset-
+  name: job-openshift-day-gpu-machineset
+  namespace: nvidia-gpu-operator
+spec:
+  template:
+    spec:
+      containers:
+        - name: job-openshift-day-gpu-machineset
+          image: registry.redhat.io/openshift4/ose-cli
+          env:
+            - name: INSTANCE_TYPE
+              value: "g6e.4xlarge"
+            - name: MACHINE_REPLICAS
+              value: "1"
+            - name: MACHINE_MIN
+              value: "1"
+            - name: MACHINE_MAX
+              value: "4"
+            - name: NODE_VOLUME_SIZE
+              value: "250"
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          command:
+            - /bin/bash
+            - -c
+            - /scripts/job.sh
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: job-openshift-day-gpu-machineset
+            defaultMode: 0755
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      serviceAccount: job-openshift-day-gpu-machineset
+      serviceAccountName: job-openshift-day-gpu-machineset
