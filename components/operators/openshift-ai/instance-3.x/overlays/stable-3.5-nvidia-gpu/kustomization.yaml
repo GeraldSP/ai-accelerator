@@ -18,6 +18,7 @@ components:
   - ../../components/components-trainingoperator
   - ../../components/components-trustyai
   - ../../components/components-workbenches
+  - ../../components/dashboard-config-enable-all
   - ../../components/disable-amd-runtimes
   - ../../components/disable-gaudi-runtimes
   - ../../components/disable-ibm-runtimes
