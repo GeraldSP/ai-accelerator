@@ -13,15 +13,12 @@ spec:
     autorag: true
     connectionTest: true
     deploymentWizardYAMLViewer: true
-    disableAcceleratorProfiles: false
     disableAdminConnectionTypes: false
     disableBYONImageStream: false
     disableClusterManager: false
     disableCustomServingRuntimes: false
     disableDistributedWorkloads: false
     disableFeatureStore: false
-    disableFineTuning: false
-    disableHardwareProfiles: false
     disableHome: false
     disableISVBadges: false
     disableInfo: false
@@ -33,7 +30,6 @@ spec:
     disableLLMd: false
     disableLMEval: false
     disableModelCatalog: false
-    disableModelMesh: false
     disableModelRegistry: false
     disableModelRegistrySecureDB: false
     disableModelServing: false
@@ -60,10 +56,8 @@ spec:
     guardrails: true
     llmGatewayField: true
     llmdTemplates: true
-    maasAuthPolicies: true
     mcpCatalog: true
     mcpRegistry: true
-    mlflow: true
     modelAsService: true
     observabilityDashboard: true
     projectRBAC: true
