@@ -1,0 +1,18 @@
+# Example batch config for scripts/tenant-wizard.sh
+# Usage: ./scripts/tenant-wizard.sh --config scripts/tenant-wizard.example.yaml
+
+overlay: summit-connect-chile
+
+# Optional: bootstrap | register | both (default: both)
+mode: both
+
+tenants:
+  - name: summit-connect-chile   # tenant id; warns if already registered for overlay
+    repoURL: https://github.com/GeraldSP/ai-accelerator-tenants.git
+    targetRevision: main
+    path: summit-connect-chile/namespaces/overlays/summit-connect-chile
+    # overwrite: true   # set to re-register the same id in batch mode
+
+  # - name: other-team
+  #   clonePath: ../other-tenants   # alternative to repoURL + targetRevision
+  #   path: other-team/namespaces/overlays/summit-connect-chile
