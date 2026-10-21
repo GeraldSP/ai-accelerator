@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: __TENANT_ID__-namespaces
+  namespace: openshift-gitops
+  labels:
+    tenants.pointer: "true"
+    tenants.id: __TENANT_ID__
+spec:
+  project: tenants
+  source:
+    repoURL: __REPO_URL__
+    targetRevision: __TARGET_REVISION__
+    path: __REMOTE_PATH__
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 20m
