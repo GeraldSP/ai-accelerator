@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helpdesk-email-triage-demo-namespaces
+  namespace: openshift-gitops
+  labels:
+    tenants.pointer: "true"
+    tenants.id: helpdesk-email-triage-demo
+spec:
+  project: tenants
+  source:
+    repoURL: https://github.com/GeraldSP/ai-accelerator-tenants.git
+    targetRevision: main
+    path: helpdesk-email-triage-demo/namespaces/overlays/summit-connect-chile
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 20m

@@ -1,0 +1,16 @@
+# Batch config for scripts/tenant-wizard.sh — lab-infra + helpdesk-email-triage-demo
+# Usage: ./scripts/tenant-wizard.sh --config scripts/helpdesk-tenants.yaml
+
+overlay: summit-connect-chile
+mode: both
+
+tenants:
+  - name: lab-infra
+    repoURL: https://github.com/GeraldSP/ai-accelerator-tenants.git
+    targetRevision: main
+    path: lab-infra/namespaces/overlays/summit-connect-chile
+
+  - name: helpdesk-email-triage-demo
+    repoURL: https://github.com/GeraldSP/ai-accelerator-tenants.git
+    targetRevision: main
+    path: helpdesk-email-triage-demo/namespaces/overlays/summit-connect-chile
