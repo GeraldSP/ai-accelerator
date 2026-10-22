@@ -1,4 +1,4 @@
-# Batch config for scripts/tenant-wizard.sh — lab-infra + helpdesk-email-triage-demo
+# Batch config for scripts/tenant-wizard.sh — lab-infra + demo tenants
 # Usage: ./scripts/tenant-wizard.sh --config scripts/helpdesk-tenants.yaml
 
 overlay: summit-connect-chile
@@ -14,3 +14,8 @@ tenants:
     repoURL: https://github.com/GeraldSP/ai-accelerator-tenants.git
     targetRevision: main
     path: helpdesk-email-triage-demo/namespaces/overlays/summit-connect-chile
+
+  - name: aiops-sandboxed-agent-fleet
+    repoURL: https://github.com/GeraldSP/ai-accelerator-tenants.git
+    targetRevision: main
+    path: aiops-sandboxed-agent-fleet/namespaces/overlays/summit-connect-chile

@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: aiops-sandboxed-agent-fleet-namespaces
+  namespace: openshift-gitops
+  labels:
+    tenants.pointer: "true"
+    tenants.id: aiops-sandboxed-agent-fleet
+spec:
+  project: tenants
+  source:
+    repoURL: https://github.com/GeraldSP/ai-accelerator-tenants.git
+    targetRevision: main
+    path: aiops-sandboxed-agent-fleet/namespaces/overlays/summit-connect-chile
+  destination:
+    server: https://kubernetes.default.svc
+  # nemoclaw-inference is applied from a gitignored env file in the tenants repo
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: nemoclaw-inference
+      namespace: openshell
+      jsonPointers:
+        - /data
+        - /stringData
+    - group: ""
+      kind: Secret
+      name: nemoclaw-ghcr
+      namespace: openshell
+      jsonPointers:
+        - /data
+        - /stringData
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 20m
+    syncOptions:
+      - RespectIgnoreDifferences=true
